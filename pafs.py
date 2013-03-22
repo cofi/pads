@@ -38,3 +38,15 @@ def pa_info():
         info[dev].setdefault('default', False)
 
     return info
+
+
+def default_streams():
+    info = pa_info()
+    for dev, prop in info.iteritems():
+        if prop['default']:
+            if prop['type'] == 'sink':
+                default_sink = dev
+            if prop['type'] == 'source':
+                default_source = dev
+
+    return default_source, default_sink
