@@ -47,23 +47,33 @@ def default_streams():
     for dev, prop in info.iteritems():
         if prop['default']:
             if prop['type'] == 'sink':
-                default_sink = dev
+                default_sink = dev, prop
             if prop['type'] == 'source':
-                default_source = dev
+                default_source = dev, prop
 
     return default_source, default_sink
 
 
 def mute(stream):
-    pass
+    name, props = stream
+    cmd = 'set-%s-mute' % props['type']
+    if props['muted'] == 'yes':
+        value = 'no'
+    else:
+        value = 'yes'
+    subprocess.call(['pactl', cmd, name, value])
 
 
-def volume(stream, change):
-    pass
+def change_volume(stream, change):
+    name, props = stream
+    cmd = 'set-%s-volume' % props['type']
+    volume = props['volume'] + change
+    subprocess.call(['pactl', cmd, name, volume_hex(volume)])
 
 
 def print_info(info):
     pass
+
 
 if __name__ == '__main__':
     def usage():
@@ -94,7 +104,7 @@ in-mute               -- toggle mute of stream
     if cmd in ('in-up', 'in-down', 'in-mute'):
         stream = souce
     if cmd in ('up', 'down', 'in-up', 'in-down'):
-        volume(stream, volume)
+        change_volume(stream, volume)
     elif cmd in ('mute', 'in-mute'):
         mute(stream)
     elif cmd == 'info':
