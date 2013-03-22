@@ -64,10 +64,13 @@ def mute(stream):
     subprocess.call(['pactl', cmd, name, value])
 
 
-def change_volume(stream, change):
+def change_volume(stream, change, absolute=False):
     name, props = stream
     cmd = 'set-%s-volume' % props['type']
-    volume = props['volume'] + change
+    if absolute:
+        volume = change
+    else:
+        volume = props['volume'] + change
     subprocess.call(['pactl', cmd, name, volume_hex(volume)])
 
 
@@ -82,12 +85,14 @@ Pulse audio default stream manipulation
 
 Commands:
 info                  -- show information about default streams
-up [percentage]       -- increase by percentage
-down [percentage]     -- decrease by percentage
-mute                  -- toggle mute of stream
-in-up [percentage]    -- increase by percentage
-in-down [percentage]  -- decrease by percentage
-in-mute               -- toggle mute of stream
+up [percentage]       -- increase output by percentage
+down [percentage]     -- decrease output by percentage
+set [percentage]      -- set output to percentage
+mute                  -- toggle mute of output
+in-up [percentage]    -- increase input by percentage
+in-down [percentage]  -- decrease input by percentage
+in-set [percentage]   -- set input to percentage
+in-mute               -- toggle mute of input
 """
     import sys
     cmd = sys.argv[1]
@@ -95,14 +100,14 @@ in-mute               -- toggle mute of stream
 
     source, sink = default_streams()
 
-    if cmd in ('up', 'down', 'in-up', 'in-down'):
+    if cmd in ('up', 'down', 'in-up', 'in-down', 'set', 'in-set'):
         volume = float(args[0])
     if cmd in ('down', 'in-down'):
         volume = - volume
-    if cmd in ('up', 'down', 'mute'):
+    if cmd in ('up', 'down', 'mute', 'set'):
         stream = sink
-    if cmd in ('in-up', 'in-down', 'in-mute'):
-        stream = souce
+    if cmd in ('in-up', 'in-down', 'in-mute', 'in-set'):
+        stream = source
     if cmd in ('up', 'down', 'in-up', 'in-down'):
         change_volume(stream, volume)
     elif cmd in ('mute', 'in-mute'):
@@ -111,3 +116,5 @@ in-mute               -- toggle mute of stream
         print_info()
     else:
         usage()
+    elif cmd in ('set', 'in-set'):
+        change_volume(stream, volume, absolut=True)
