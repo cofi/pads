@@ -74,8 +74,12 @@ def change_volume(stream, change, absolute=False):
     subprocess.call(['pactl', cmd, name, volume_hex(volume)])
 
 
-def print_info(info):
-    pass
+def print_info(source, sink):
+    print '%.0f%% [%s] - %.0f%% [%s]' % (
+        sink['volume'],
+        'on' if sink['muted'] == 'yes' else 'off',
+        source['volume'],
+        'on' if source['muted'] == 'yes' else 'off')
 
 
 if __name__ == '__main__':
@@ -112,9 +116,9 @@ in-mute               -- toggle mute of input
         change_volume(stream, volume)
     elif cmd in ('mute', 'in-mute'):
         mute(stream)
-    elif cmd == 'info':
-        print_info()
-    else:
-        usage()
     elif cmd in ('set', 'in-set'):
         change_volume(stream, volume, absolut=True)
+    elif cmd == 'info':
+        print_info(source[1], sink[1])
+    else:
+        usage()
