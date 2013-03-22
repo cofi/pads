@@ -50,3 +50,52 @@ def default_streams():
                 default_source = dev
 
     return default_source, default_sink
+
+
+def mute(stream):
+    pass
+
+
+def volume(stream, change):
+    pass
+
+
+def print_info(info):
+    pass
+
+if __name__ == '__main__':
+    def usage():
+        print """\
+Pulse audio default stream manipulation
+
+Commands:
+info                  -- show information about default streams
+up [percentage]       -- increase by percentage
+down [percentage]     -- decrease by percentage
+mute                  -- toggle mute of stream
+in-up [percentage]    -- increase by percentage
+in-down [percentage]  -- decrease by percentage
+in-mute               -- toggle mute of stream
+"""
+    import sys
+    cmd = sys.argv[1]
+    args = sys.argv[2:]
+
+    source, sink = default_streams()
+
+    if cmd in ('up', 'down', 'in-up', 'in-down'):
+        volume = float(args[0])
+    if cmd in ('down', 'in-down'):
+        volume = - volume
+    if cmd in ('up', 'down', 'mute'):
+        stream = sink
+    if cmd in ('in-up', 'in-down', 'in-mute'):
+        stream = souce
+    if cmd in ('up', 'down', 'in-up', 'in-down'):
+        volume(stream, volume)
+    elif cmd in ('mute', 'in-mute'):
+        mute(stream)
+    elif cmd == 'info':
+        print_info()
+    else:
+        usage()
