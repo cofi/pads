@@ -117,7 +117,7 @@ in-mute               -- toggle mute of input
     elif cmd in ('mute', 'in-mute'):
         mute(stream)
     elif cmd in ('set', 'in-set'):
-        change_volume(stream, volume, absolut=True)
+        change_volume(stream, volume, absolute=True)
     elif cmd == 'info':
         print_info(source[1], sink[1])
     else:
