@@ -4,6 +4,17 @@ import subprocess
 from collections import defaultdict
 
 
+MAX_VOLUME = 2 ** 16
+
+
+def volume_percent(hex_value):
+    return (int(hex_value, 16) / MAX_VOLUME) * 100
+
+
+def volume_hex(percent):
+    return hex(int((percent / 100) * MAX_VOLUME))
+
+
 def pa_info():
     p = subprocess.Popen('pacmd dump'.split(), stdout=subprocess.PIPE)
     out, _ = p.communicate()
