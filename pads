@@ -99,7 +99,10 @@ in-set [percentage]   -- set input to percentage
 in-mute               -- toggle mute of input
 """
     import sys
-    cmd = sys.argv[1]
+    try:
+        cmd = sys.argv[1]
+    except IndexError:
+        cmd = 'help'
     args = sys.argv[2:]
 
     source, sink = default_streams()
