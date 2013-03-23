@@ -77,9 +77,9 @@ def change_volume(stream, change, absolute=False):
 def print_info(source, sink):
     print '%.0f%% [%s] - %.0f%% [%s]' % (
         sink['volume'],
-        'on' if sink['muted'] == 'yes' else 'off',
+        'on' if sink['muted'] == 'no' else 'off',
         source['volume'],
-        'on' if source['muted'] == 'yes' else 'off')
+        'on' if source['muted'] == 'no' else 'off')
 
 
 if __name__ == '__main__':
